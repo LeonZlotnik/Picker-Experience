@@ -1,11 +1,17 @@
 // VARIABLES
 
-var Player;
+var picker;
+var platforms;
+
+// Constructores
 
 function startGame() {
     myGameArea.start();
     myGameArea.grid();
-    Player = new Player(30, 30, "red", 10, 120);
+    drawPlatforms();
+
+    picker = new Player(75, 75, "blue", 560, 260);
+    
 }
 
 var myGameArea = {
@@ -24,6 +30,7 @@ var myGameArea = {
             myGameArea.keys[e.keyCode] = (e.type == "keydown");            
         })
     }, 
+    cart : [],
     grid : function(){
         this.context = this.canvas.getContext('2d');
         
@@ -48,160 +55,246 @@ var myGameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
+var productos = [
+    {nombre: 'queso', foto:'img/chees.png' },
+    {nombre: 'carne', foto:'img/ham.png' },
+    {nombre: 'leche', foto:'img/milk.png' },
+    {nombre: 'fruta', foto:'img/apple.png' },
+    {nombre: 'mermelada', foto:'img/jam.png' },
+    {nombre: 'pan', foto:'img/bread.png' },
+];
+var platforms = []; //como encontrar los productos [1].box1.producto
+//Shelf 01
+platforms.push({
+    x:0,
+    y:0,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
+    width:150,
+    height:225,
+        box1: {
+        x:0,
+        y:75,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2: {
+        x:0,
+        y:150,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3: {
+        x:0,
+        y:225,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+});
+//Shelf 02
+platforms.push({
+    x:0,
+    y:375,
+    width:150,
+    height:225,
+        box1: {
+        x:0,
+        y:375,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2: {
+        x:0,
+        y:450,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3: {
+        x:0,
+        y:525,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+    
+});
+//Shelf 03
+platforms.push({
+    x:450,
+    y:0,
+    width:150,
+    height:225,
+        box1:{
+        x:450,
+        y:75,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:450,
+        y:150,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:450,
+        y:225,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
 
+});
+//Shelf 04
+platforms.push({
+    x:450,
+    y:375,
+    width:150,
+    height:225,
+        box1:{
+        x:450,
+        y:375,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:450,
+        y:450,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:450,
+        y:525,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+  
+});
+//Shelf 05
+platforms.push({
+    x:600,
+    y:0,
+    width:150,
+    height:225,
+        box1:{
+        x:600,
+        y:75,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:600,
+        y:150,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:600,
+        y:225,
+        productos: productos[Math.floor(Math.random()*productos.length)]}
+    
+});
+//Shelf 06
+platforms.push({
+    x:600,
+    y:375,
+    width:150,
+    height:225,
+        box1:{
+        x:600,
+        y:375,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:600,
+        y:450,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:600,
+        y:525,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+});
+//Shelf 07
+platforms.push({
+    x:1050,
+    y:0,
+    width:150,
+    height:225,
+        box1:{
+        x:1050,
+        y:75,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:1050,
+        y:150,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:1050,
+        y:225,
+        productos: productos[Math.floor(Math.random()*productos.length)]}
+});
+//Shelf 08
+platforms.push({
+    x:1050,
+    y:375,
+    width:150,
+    height:225,
+        box1:{
+        x:1050,
+        y:375,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box2:{
+        x:1050,
+        y:450,
+        productos: productos[Math.floor(Math.random()*productos.length)]},
+        box3:{
+        x:1050,
+        y:525,
+        productos: productos[Math.floor(Math.random()*productos.length)]}
+});
+//Function Platforms
+
+function drawPlatforms(){
+
+    var ctx = myGameArea.canvas.getContext('2d')
+
+    ctx.fillStyle = "brown";
+    platforms.forEach( platform => {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        ctx.stroke();
+    });
+    return platforms;
+}
+
+
+//Constructores
 function Player(width, height, color, x, y) {
     this.gamearea = myGameArea;
     this.width = width;
     this.height = height;
     this.speedX = 0;
     this.speedY = 0;    
-    this.x = x;
-    this.y = y;    
+    this.x = x; 
+    this.y = y; 
     this.update = function() {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        stopMove();
     }
     this.newPos = function() {
         this.x += this.speedX;
         this.y += this.speedY;        
-    }    
-}
+    }
+
+    this.stopMove = function(){
+      this.SpeedX = 0;
+      this.SpeedY = 0;
+    }
+
+
+    this.collition = (p) => {
+        //for(var i=0; i<= p.lenght; i++) {
+            if(this.x <= p.x2 && this.y <= p.y2) {
+                alert('chocaste')};
+        }
+    }
+
+    // console.log(this.x) 
+
+ console.log(platforms[3].box1);
+
+//Listeners
 
 function updateGameArea() {
     myGameArea.clear();
     myGameArea.grid();
-    Player.speedX = 0;
-    Player.speedY = 0;    
-    if (myGameArea.keys && myGameArea.keys[37]) {Player.speedX = -2; }
-    if (myGameArea.keys && myGameArea.keys[39]) {Player.speedX = 2; }
-    if (myGameArea.keys && myGameArea.keys[38]) {Player.speedY = -2; }
-    if (myGameArea.keys && myGameArea.keys[40]) {Player.speedY = 2; }
-    Player.newPos();    
-    Player.update();
+    drawPlatforms();
+    picker.speedX = 0;
+    picker.speedY = 0;    
+    if (myGameArea.keys && myGameArea.keys[37]) {picker.speedX = -10; }
+    if (myGameArea.keys && myGameArea.keys[39]) {picker.speedX = 10; }
+    if (myGameArea.keys && myGameArea.keys[38]) {picker.speedY = -8; }
+    if (myGameArea.keys && myGameArea.keys[40]) {picker.speedY = 8; }
+    //if (Player.collition) {Player.speedX = 0; }
+    if (myGameArea.keys && picker.collition && myGameArea.keys[38]) {picker.stopMove();}
+
+    picker.newPos();    
+    picker.update();
+    picker.collition(platforms[0]);
+    SpeedX.stopMove();
+    SpeedY.stopMove();
 }
 
 startGame();
 
-/*var myArea = {
-    draw: function(){
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext('2d');
-        
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 1; 
-
-        for(var x=0; x<1201; x=x+150){
-
-            ctx.moveTo(x,0);
-            ctx.lineTo(x,600);
-            ctx.stroke();
-
-        }
-        for(var y=0; y<601; y=y+75){
-            
-            ctx.moveTo(0,y);
-            ctx.lineTo(1200,y);
-            ctx.stroke();
-        }
-    },
-    clear: function(){
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext('2d');
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-    },
-};
-
-// FUNCIONES CONSTRUCTORAS
-
-function Player(x,y,width,height,color) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.SpeedX = 0;
-    this.SpeedY = 0;    
-    
-
-    this.draw = function() {
-        var ctx = document.getElementById("canvas").getContext('2d')
-        var imageObj = new Image();
-        imageObj.src = 'https://www.topsimages.com/thumbs/Fr3s0en6QJQ6zv5V3FXtvs63-5K_dq646pORpPDQNMwS7qX0ihPWI-cuYfOCpXbMH4vwIdyHmx1yPRsOL6Kz-Q.jpgs';
-
-        imageObj.onload = function(){
-            ctx.drawImage(imageObj, 69, 50);
-        }     
-        /*var canvas = document.getElementById("canvas");
-            var ctx = canvas.getContext('2d');
-            ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height)
-            }
-    this.cart = [];
-
-    this.moveTop = function(){
-        this.SpeedY -= 1
-    }
-
-    this.moveBottom = function(){
-        this.SpeedY += 1
-    }
-
-    this.moveRight = function(){
-        this.SpeedX += 1
-    }
-
-    this.moveLeft = function(){
-        this.SpeedX -= 1
-    }
-
-}
-}
-
-
-// FUNCIONES COMPLEMENTARIAS
-
-var player1 = new Player(5,5,50,50,'red')
-
-// function update() {
-
-// }
-
-function start() {
-    player1.draw()
-}
-
-start()
-
-
-
-
-
-// LISTENERS
-
-
-window.onload = function(){
-    myArea.clear();
-    myArea.draw();
-    // player1.draw();
-    // player1.clear();
-    
-}
-
-
-document.onkeydown = function(){
-    switch (e.keyCode){
-        case 38:
-        moveUp();
-        break;
-        case 40:
-        moveDown();
-        break;
-        case 37:
-        moveRight();
-        break;
-        case 39:
-        moverLeft();
-        break;
-    }
-}
-*/
