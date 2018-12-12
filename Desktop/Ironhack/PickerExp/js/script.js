@@ -9,6 +9,7 @@ function startGame() {
     myGameArea.start();
     myGameArea.grid();
     drawPlatforms();
+    drawProducts();
 
     picker = new Player(75, 75, "blue", 560, 260);
     
@@ -56,12 +57,12 @@ var myGameArea = {
     }
 }
 var productos = [
-    {nombre: 'queso', foto:'img/chees.png' },
-    {nombre: 'carne', foto:'img/ham.png' },
-    {nombre: 'leche', foto:'img/milk.png' },
-    {nombre: 'fruta', foto:'img/apple.png' },
-    {nombre: 'mermelada', foto:'img/jam.png' },
-    {nombre: 'pan', foto:'img/bread.png' },
+    {nombre: 'queso', foto:'./img/chees.png' },
+    {nombre: 'carne', foto:'./img/ham.png' },
+    {nombre: 'leche', foto:'./img/milk.png' },
+    {nombre: 'fruta', foto:'./img/apple.png' },
+    {nombre: 'mermelada', foto:'./img/jam.png' },
+    {nombre: 'pan', foto:'./img/bread.png' },
 ];
 var platforms = []; //como encontrar los productos [1].box1.producto
 //Shelf 01
@@ -74,21 +75,23 @@ platforms.push({
     height:225,
         box1: {
         x:0,
-        y:75,
+        y:0,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box2: {
         x:0,
-        y:150,
+        y:75,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box3: {
         x:0,
-        y:225,
+        y:150,
         productos: productos[Math.floor(Math.random()*productos.length)]},
 });
 //Shelf 02
 platforms.push({
     x:0,
     y:375,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1: {
@@ -109,19 +112,21 @@ platforms.push({
 platforms.push({
     x:450,
     y:0,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
         x:450,
-        y:75,
+        y:0,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box2:{
         x:450,
-        y:150,
+        y:75,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box3:{
         x:450,
-        y:225,
+        y:150,
         productos: productos[Math.floor(Math.random()*productos.length)]},
 
 });
@@ -129,6 +134,8 @@ platforms.push({
 platforms.push({
     x:450,
     y:375,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
@@ -149,19 +156,21 @@ platforms.push({
 platforms.push({
     x:600,
     y:0,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
         x:600,
-        y:75,
+        y:0,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box2:{
         x:600,
-        y:150,
+        y:75,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box3:{
         x:600,
-        y:225,
+        y:150,
         productos: productos[Math.floor(Math.random()*productos.length)]}
     
 });
@@ -169,6 +178,8 @@ platforms.push({
 platforms.push({
     x:600,
     y:375,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
@@ -188,25 +199,29 @@ platforms.push({
 platforms.push({
     x:1050,
     y:0,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
         x:1050,
-        y:75,
+        y:0,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box2:{
         x:1050,
-        y:150,
+        y:75,
         productos: productos[Math.floor(Math.random()*productos.length)]},
         box3:{
         x:1050,
-        y:225,
+        y:150,
         productos: productos[Math.floor(Math.random()*productos.length)]}
 });
 //Shelf 08
 platforms.push({
     x:1050,
     y:375,
+    x2: this.x + this.width,
+    y2: this.y + this.width,
     width:150,
     height:225,
         box1:{
@@ -224,17 +239,48 @@ platforms.push({
 });
 //Function Platforms
 
+
 function drawPlatforms(){
 
     var ctx = myGameArea.canvas.getContext('2d')
 
     ctx.fillStyle = "brown";
     platforms.forEach( platform => {
+        
         ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
         ctx.stroke();
     });
     return platforms;
 }
+
+ function drawProducts(){
+     platforms.forEach( producto => {
+         var img1 = new Image();
+         var img2 = new Image();
+         var img3 = new Image();
+         img1.src = producto.box1.productos['foto'];
+         img1.onload = function(){
+             ctx.drawImage(img1,producto.box1.x, producto.box1.y, 60, 60);
+         };
+         img2.src = producto.box2.productos['foto'];
+         img2.onload = function(){
+             ctx.drawImage(img2,producto.box2.x, producto.box2.y, 60, 60);
+         };
+         img3.src = producto.box3.productos['foto'];
+         img3.onload = function(){
+             ctx.drawImage(img3,producto.box3.x, producto.box3.y, 60, 60);
+         };
+     });    
+     return platforms;
+ }
+
+/*function drawProducts() {
+    var img1 = new Image();
+    img1.src = platforms[0].box1.productos['foto'];
+    img1.addEventListener('load', function() {
+        ctx.drawImage(img1,platforms[0].box1.x, platforms[0].box1.y, 60, 60);
+    })
+}*/
 
 
 //Constructores
@@ -250,7 +296,7 @@ function Player(width, height, color, x, y) {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-        stopMove();
+        //stopMove();
     }
     this.newPos = function() {
         this.x += this.speedX;
@@ -272,14 +318,14 @@ function Player(width, height, color, x, y) {
 
     // console.log(this.x) 
 
- console.log(platforms[3].box1);
+//  console.log(platforms[3].box1);
 
 //Listeners
 
 function updateGameArea() {
     myGameArea.clear();
     myGameArea.grid();
-    drawPlatforms();
+    
     picker.speedX = 0;
     picker.speedY = 0;    
     if (myGameArea.keys && myGameArea.keys[37]) {picker.speedX = -10; }
@@ -292,8 +338,13 @@ function updateGameArea() {
     picker.newPos();    
     picker.update();
     picker.collition(platforms[0]);
-    SpeedX.stopMove();
-    SpeedY.stopMove();
+    drawPlatforms();
+    drawProducts();
+    //SpeedX.stopMove();
+    //SpeedY.stopMove();
+
+    //object.addEventListener('load',  productos[0].foto);
+       
 }
 
 startGame();
