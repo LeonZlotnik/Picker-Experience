@@ -7,11 +7,9 @@ var platforms;
 
 function startGame() {
     myGameArea.start();
-    myGameArea.grid();
-    drawPlatforms();
-    drawProducts();
 
-    picker = new Player(75, 75, "blue", 560, 260);
+
+    picker = new Player(75, 75, "blue", 560, 260, []);
     
 }
 
@@ -31,7 +29,6 @@ var myGameArea = {
             myGameArea.keys[e.keyCode] = (e.type == "keydown");            
         })
     }, 
-    cart : [],
     grid : function(){
         this.context = this.canvas.getContext('2d');
         
@@ -65,12 +62,44 @@ var productos = [
     {nombre: 'pan', foto:'./img/bread.png' },
 ];
 var platforms = []; //como encontrar los productos [1].box1.producto
+
+//var plat1 = new Platform()
+//var plat2 = new Platform()
+
+function Plat(x, y, x2, y2, width, height, box1, box2, box3){
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.box1 = box1;
+    this.box2 = box2;
+    this.box3 = box3;
+}
+
+Plat.prototype.findDistance = function(cart){
+    distance1 = Math.sqrt((this.box1.x - cart.x)**2 + (this.box1.y - cart.y)**2)
+    distance2 = Math.sqrt((this.box2.x - cart.x)**2 + (this.box2.y - cart.y)**2)
+    distance3 = Math.sqrt((this.box3.x - cart.x)**2 + (this.box3.y - cart.y)**2)
+
+     var mainDistance = distance1.concat(distance2);
+
+     var finalDistance = mainDistance.concat(distance3);
+
+     return finalDistance;
+
+     
+
+    //if(distance1 )
+}
+
 //Shelf 01
 platforms.push({
     x:0,
     y:0,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1: {
@@ -91,7 +120,7 @@ platforms.push({
     x:0,
     y:375,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1: {
@@ -113,7 +142,7 @@ platforms.push({
     x:450,
     y:0,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -135,7 +164,7 @@ platforms.push({
     x:450,
     y:375,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -157,7 +186,7 @@ platforms.push({
     x:600,
     y:0,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -179,7 +208,7 @@ platforms.push({
     x:600,
     y:375,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -200,7 +229,7 @@ platforms.push({
     x:1050,
     y:0,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -221,7 +250,7 @@ platforms.push({
     x:1050,
     y:375,
     x2: this.x + this.width,
-    y2: this.y + this.width,
+    y2: this.y + this.height,
     width:150,
     height:225,
         box1:{
@@ -238,7 +267,8 @@ platforms.push({
         productos: productos[Math.floor(Math.random()*productos.length)]}
 });
 //Function Platforms
-
+//x, y, x2, y2, width, height, box1, box2, box3)
+platforms = platforms.map(el => new Plat(el.x, el.y, el.x2, el.y2, el.width, el.height, el.box1, el.box2, el.box3));
 
 function drawPlatforms(){
 
@@ -284,7 +314,7 @@ function drawPlatforms(){
 
 
 //Constructores
-function Player(width, height, color, x, y) {
+function Player(width, height, color, x, y, cart) {
     this.gamearea = myGameArea;
     this.width = width;
     this.height = height;
@@ -292,6 +322,9 @@ function Player(width, height, color, x, y) {
     this.speedY = 0;    
     this.x = x; 
     this.y = y; 
+    this.x2 = this.x + this.width;
+    this.y2 = this.y + this.height;
+    this.cart = cart;
     this.update = function() {
         ctx = myGameArea.context;
         ctx.fillStyle = color;
@@ -311,7 +344,7 @@ function Player(width, height, color, x, y) {
 
     this.collition = (p) => {
         //for(var i=0; i<= p.lenght; i++) {
-            if(this.x <= p.x2 && this.y <= p.y2) {
+            if(this.x <= p.x2 || this.y <= p.y2) {
                 alert('chocaste')};
         }
     }
@@ -324,7 +357,6 @@ function Player(width, height, color, x, y) {
 
 function updateGameArea() {
     myGameArea.clear();
-    myGameArea.grid();
     
     picker.speedX = 0;
     picker.speedY = 0;    
@@ -332,19 +364,17 @@ function updateGameArea() {
     if (myGameArea.keys && myGameArea.keys[39]) {picker.speedX = 10; }
     if (myGameArea.keys && myGameArea.keys[38]) {picker.speedY = -8; }
     if (myGameArea.keys && myGameArea.keys[40]) {picker.speedY = 8; }
-    //if (Player.collition) {Player.speedX = 0; }
-    if (myGameArea.keys && picker.collition && myGameArea.keys[38]) {picker.stopMove();}
+    if (Plat.keys && Player.keys[32]) {picker.cart.push()}
+
+    //if key = enter
+    //platforms.forEach(el => distancias.push(el.findDistances(player)))
 
     picker.newPos();    
-    picker.update();
+    picker.update();    
     picker.collition(platforms[0]);
     drawPlatforms();
     drawProducts();
-    //SpeedX.stopMove();
-    //SpeedY.stopMove();
-
-    //object.addEventListener('load',  productos[0].foto);
-       
+  
 }
 
 startGame();
